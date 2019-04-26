@@ -1,18 +1,21 @@
-
-from selenium import webdriver
+from iexfinance.stocks import Stock, get_historical_data
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 
-def getStockData(numStocks):
-    driver = webdriver.Chrome('C:/Users/Ashton/Downloads/chromedriver_win32')
-    url = "https://finance.yahoo.com/screener/predefined/most_actives?offset=0&count=200"
-    driver.get(url)
-    stockList = []
 
-    for i in range(1, numStocks+1):
-        stockTicker = driver.find_element_by_xpath(
-            '//*[@id="scr-res-table"]/div[1]/table/tbody/tr['+str(i)+']/td[1]/a'
-        )
-        stocklist.append(stockTicker.text)
-    driver.quit()
-    return stockList
+def getStockPriceHistoryIEX(ticker, startDate):
+    endDate = datetime.now()
+    stockHistory = get_historical_data(ticker,startDate,endDate,output_format='pandas')
+    return stockHistory
+
+
+def plotStockData(stockAsPandas):
+    stockAsPandas.plot()
+    plt.show()
+
+def getStockListPriceHistoryIEX(tickerList, startDate):
+    stockDataList = []
+    for ticker in tickerList:
+        stockDataList.append(getStockPriceHistoryIEX(ticker, startDate))
+    return stockDataList
