@@ -11,7 +11,7 @@ def getStockPriceHistoryIEX(ticker, startDate):
 
 
 def plotStockData(stockAsPandas):
-    stockAsPandas.plot()
+    (stockAsPandas.loc[:, stockAsPandas.columns != 'volume']).plot()
     plt.show()
 
 def getStockListPriceHistoryIEX(tickerList, startDate):

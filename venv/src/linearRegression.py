@@ -1,7 +1,8 @@
 import numpy as np
 import time
 import smtplib
-from datetime import datetime
+import datetime
+from dataParser import getStockPriceHistoryIEX, plotStockData
 
 
 from sklearn.linear_model import LinearRegression
@@ -31,11 +32,10 @@ def predictStockPrice(stock, numDays):
     return prediction
 
 
-def __init__():
+def main():
+    i = 0
+    print("hellos")
+    stockData = getStockPriceHistoryIEX("NKE", datetime.date(2018,1,1))
+    plotStockData(stockData)
 
-    stockList = getStockData(10)
-    for i in stockList:
-        try:
-            predictStockPrice(i, 3)
-        except:
-            print("Stock: "+ i + "was not predicted")
+main()
