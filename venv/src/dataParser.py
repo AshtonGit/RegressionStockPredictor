@@ -4,9 +4,10 @@ from datetime import datetime
 
 
 
-def getStockPriceHistoryIEX(ticker, startDate):
-    endDate = datetime.now()
-    stockHistory = get_historical_data(ticker,startDate,endDate,output_format='pandas')
+def getStockPriceHistoryIEX(ticker, start, end= None):
+    if end == None:
+        end = datetime.now()
+    stockHistory = get_historical_data(ticker,start,end,output_format='pandas')
     return stockHistory
 
 

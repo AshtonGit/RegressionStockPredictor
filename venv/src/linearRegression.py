@@ -6,36 +6,45 @@ from dataParser import getStockPriceHistoryIEX, plotStockData
 
 
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_validate
-from sklearn import preprocessing, svm
+from sklearn.model_selection import train_test_split
+from sklearn import preprocessing, svm, metrics
 
 
-def predictStockPrice(stock, numDays):
-    start = datetime(2018, 1, 1)
-    end = datetime.now()
-    df = get_historical_data(stock, start=start, end = end, output_format='pandas')
-    df.to_csv('Predictions/'+stock+'_Prediction.csv')
+def predictStockPrice(stock, numDays, start = None, end = None):
+    if start == None:
+        start = datetime.date(2018,1,1)
+    if end == None:
+        end = datetime.now()
 
-    df['prediction'] = df['close'].shift(-1)
-    df.dropna(inplace=True)
-    x = np.array(df.drop(['preditction'], 1))
-    y = np.array(['prediction'])
-    x = preprocessing.scale(x)
-    x_prediction = x[-int(numDays):]
-    x_train, x_test, y_train, y_test = cross_validate.train_test_split(x,y,test_size = 0.5)
-
+    df = getStockPriceHistoryIEX(stock, start, end)
+    label = df['close'].shift(-numDays)
+    X = np.array(df[['close']])
+    X = preprocessing.scale(X)
+    X_lately = X[-numDays:]
+    X = X[:-numDays]
+    label.dropna(inplace=True)
+    Y = np.array(label)
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
     clf = LinearRegression()
-    clf.fit(c_train, y_train)
-    prediction = clf.predict(x_prediction)
-    printf(prediction)
-    print("hello")
+    clf.fit(x_train, y_train)
+    score = clf.score(x_test,y_test)
+    print("Score: "+str(score))
+    prediction = clf.predict(X_lately)
+    print(prediction)
     return prediction
 
+def getAccuracy(prediction, y_true, predictedCol,numDays):
+    y_true = np.array(y_true[predictedCol].tail(numDays))
+    print(y_true)
+    acc = metrics.regression.mean_squared_error(y_true, prediction)
+    print("accuracy: "+str(acc))
 
 def main():
-    i = 0
     print("hellos")
-    stockData = getStockPriceHistoryIEX("NKE", datetime.date(2018,1,1))
+    stockData = getStockPriceHistoryIEX("NKE", datetime.date(2015,1,1))
+    prediction = predictStockPrice("NKE",3,start = datetime.date(2015,1,1),
+                                   end = datetime.date(2018,4,27))
+    print(prediction)
+    getAccuracy(prediction, stockData, 'close', 3)
     plotStockData(stockData)
-
 main()

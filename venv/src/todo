@@ -1,0 +1,5 @@
+class, method: issue
+
+linearRegression, getStockPriceData:
+    df.to_csv('Predictions/'+stock+'_Prediction.csv') no such file or directory exists
+    need to code in method that creates the folder if it doesnt exist.
