@@ -1,5 +1,4 @@
-class, method: issue
+create a simple GUI
+create an automated prediction system
+create a report compiler that highlights features / stocks of significance
 
-linearRegression, getStockPriceData:
-    df.to_csv('Predictions/'+stock+'_Prediction.csv') no such file or directory exists
-    need to code in method that creates the folder if it doesnt exist.
