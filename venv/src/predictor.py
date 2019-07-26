@@ -57,18 +57,18 @@ def predictStockLinearRegression(stock, numDays, start = None, end = None):
 
 def getAccuracy(prediction, y_true, predictedCol,numDays):
     y_true = np.array(y_true[predictedCol].tail(numDays))
+    print("Predicted Values:")
+    print(prediction)
+    print("Real Values:")
     print(y_true)
     acc = metrics.regression.mean_squared_error(y_true, prediction)
     print("accuracy: "+str(acc))
 
 def main():
-    stockData = getStockPriceHistoryIEX("NKE", datetime.date(2019,1,1))
-    prediction = predictStockLinearRegression("NKE",3,start = datetime.date(2019,1,1),
-                                   end = datetime.date(2019,4,27))
+    stockData = getStockPriceHistoryIEX("NKE", datetime.date(2018,1,1), datetime.date(2019, 1, 30))
+    prediction = predictStockLinearRegression("NKE",5,start = datetime.date(2018,1,1),
+                                   end = datetime.date(2019,1,20))
     print("Linear Regression: ")
-    getAccuracy(prediction, stockData, 'close', 3)
-    prediction = predictStockSVR("NKE", 3, start = datetime.date(2019,1,1),
-                                 end = datetime.date(2019, 4, 27))
-    print("Linear SVR: ")
-    getAccuracy(prediction, stockData, 'close', 3)
+    getAccuracy(prediction, stockData, 'close', 5)
+
 main()
